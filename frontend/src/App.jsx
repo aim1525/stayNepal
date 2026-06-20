@@ -4,6 +4,7 @@ import Register from './pages/Register'
 import Home from './pages/Home'
 import Search from './pages/Search'
 import HostDashboard from './pages/HostDashboard'
+import Booking from './pages/Booking'
 
 function App() {
   const [page, setPage] = useState('home')
@@ -23,6 +24,11 @@ function App() {
           {user && user.role === 'host' && (
             <span onClick={() => setPage('host')} style={{color:'white', cursor:'pointer', fontSize:'14px'}}>
               My Dashboard
+            </span>
+          )}
+          {user && user.role === 'tourist' && (
+            <span onClick={() => setPage('booking')} style={{color:'white', cursor:'pointer', fontSize:'14px'}}>
+              My Bookings
             </span>
           )}
           {user ? (
@@ -53,6 +59,7 @@ function App() {
       {page === 'register' && <Register setPage={setPage} setUser={setUser} />}
       {page === 'search' && <Search setPage={setPage} setSelectedHomestay={setSelectedHomestay} />}
       {page === 'host' && <HostDashboard user={user} />}
+      {page === 'booking' && <Booking user={user} homestay={selectedHomestay} setPage={setPage} />}
     </div>
   )
 }

@@ -50,7 +50,7 @@ function Search({ setPage, setSelectedHomestay }) {
                 </p>
                 <p style={{color:'#6b7280', fontSize:'13px', marginBottom:'16px'}}>{h.description_en?.slice(0, 80)}...</p>
                 <button
-                  onClick={() => { setSelectedHomestay(h); setPage('detail') }}
+                  onClick={() => { setSelectedHomestay(h); setPage('booking') }}
                   style={{width:'100%', padding:'10px', background:'#2563eb', color:'white', border:'none', borderRadius:'6px', cursor:'pointer', fontWeight:'500'}}
                 >
                   View Details
