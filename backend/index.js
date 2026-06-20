@@ -21,6 +21,7 @@ app.get('/', (req, res) => {
   res.json({ message: 'StayNepal API is running!' });
 });
 
+// REGISTER
 app.post('/api/auth/register', async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
@@ -46,6 +47,7 @@ app.post('/api/auth/register', async (req, res) => {
   }
 });
 
+// LOGIN
 app.post('/api/auth/login', async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -66,6 +68,48 @@ app.post('/api/auth/login', async (req, res) => {
       { expiresIn: '7d' }
     );
     res.json({ user: { id: user.id, name: user.name, email: user.email, role: user.role }, token });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// GET ALL HOMESTAYS
+app.get('/api/homestays', async (req, res) => {
+  try {
+    const result = await pool.query(
+      'SELECT homestays.*, users.name as host_name FROM homestays JOIN users ON homestays.host_id = users.id ORDER BY created_at DESC'
+    );
+    res.json(result.rows);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// ADD NEW HOMESTAY
+app.post('/api/homestays', async (req, res) => {
+  try {
+    const { host_id, name_en, name_ne, district, price_per_night, description_en, description_ne, cultural_experiences } = req.body;
+    const result = await pool.query(
+      'INSERT INTO homestays (host_id, name_en, name_ne, district, price_per_night, description_en, description_ne, cultural_experiences) VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *',
+      [host_id, name_en, name_ne, district, price_per_night, description_en, description_ne, cultural_experiences]
+    );
+    res.status(201).json(result.rows[0]);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// GET SINGLE HOMESTAY
+app.get('/api/homestays/:id', async (req, res) => {
+  try {
+    const result = await pool.query(
+      'SELECT homestays.*, users.name as host_name FROM homestays JOIN users ON homestays.host_id = users.id WHERE homestays.id = $1',
+      [req.params.id]
+    );
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'Homestay not found' });
+    }
+    res.json(result.rows[0]);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
