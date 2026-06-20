@@ -93,7 +93,7 @@ function App() {
       {page === 'home' && <Home setPage={setPage} lang={lang} />}
       {page === 'login' && <Login setPage={setPage} setUser={setUser} lang={lang} />}
       {page === 'register' && <Register setPage={setPage} setUser={setUser} lang={lang} />}
-      {page === 'search' && <Search setPage={setPage} setSelectedHomestay={setSelectedHomestay} lang={lang} />}
+      {page === 'search' && <Search setPage={setPage} setSelectedHomestay={setSelectedHomestay} lang={lang} user={user} />}
       {page === 'host' && <HostDashboard user={user} lang={lang} />}
       {page === 'booking' && <Booking user={user} homestay={selectedHomestay} setPage={setPage} lang={lang} />}
       {page === 'mybookings' && <MyBookings user={user} setPage={setPage} lang={lang} />}
