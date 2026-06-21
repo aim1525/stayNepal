@@ -173,6 +173,52 @@ app.post('/api/reviews', async (req, res) => {
   }
 })
 
+// ADMIN STATS
+app.get('/api/admin/stats', async (req, res) => {
+  try {
+    const users = await pool.query('SELECT COUNT(*) FROM users')
+    const homestays = await pool.query('SELECT COUNT(*) FROM homestays')
+    const bookings = await pool.query('SELECT COUNT(*) FROM bookings')
+    const revenue = await pool.query('SELECT SUM(total_price) FROM bookings')
+    res.json({
+      total_users: parseInt(users.rows[0].count),
+      total_homestays: parseInt(homestays.rows[0].count),
+      total_bookings: parseInt(bookings.rows[0].count),
+      total_revenue: parseFloat(revenue.rows[0].sum) || 0
+    })
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+})
+
+// ADMIN ALL BOOKINGS
+app.get('/api/admin/bookings', async (req, res) => {
+  try {
+    const result = await pool.query(
+      `SELECT bookings.*, homestays.name_en 
+       FROM bookings 
+       JOIN homestays ON bookings.homestay_id = homestays.id 
+       ORDER BY bookings.created_at DESC`
+    )
+    res.json(result.rows)
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+})
+
+// VERIFY HOMESTAY
+app.put('/api/admin/homestays/:id/verify', async (req, res) => {
+  try {
+    const result = await pool.query(
+      'UPDATE homestays SET is_verified = true WHERE id = $1 RETURNING *',
+      [req.params.id]
+    )
+    res.json(result.rows[0])
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+})
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log('StayNepal server running on port ' + PORT);

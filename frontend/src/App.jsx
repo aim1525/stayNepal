@@ -7,6 +7,7 @@ import HostDashboard from './pages/HostDashboard'
 import Booking from './pages/Booking'
 import MyBookings from './pages/MyBookings'
 import Reviews from './pages/Reviews'
+import Admin from './pages/Admin'
 
 function App() {
   const [page, setPage] = useState('home')
@@ -59,6 +60,11 @@ function App() {
               {text.myBookings}
             </span>
           )}
+          {user && user.role === 'admin' && (
+            <span onClick={() => setPage('admin')} style={{color:'white', cursor:'pointer', fontSize:'14px'}}>
+              Admin
+            </span>
+          )}
           <button
             onClick={() => setLang(lang === 'en' ? 'ne' : 'en')}
             style={{background:'#374151', color:'white', border:'1px solid #6b7280', padding:'6px 12px', borderRadius:'6px', cursor:'pointer', fontSize:'13px', fontWeight:'500'}}
@@ -96,6 +102,7 @@ function App() {
       {page === 'booking' && <Booking user={user} homestay={selectedHomestay} setPage={setPage} lang={lang} />}
       {page === 'mybookings' && <MyBookings user={user} setPage={setPage} lang={lang} />}
       {page === 'reviews' && <Reviews user={user} homestay={selectedHomestay} setPage={setPage} />}
+      {page === 'admin' && <Admin user={user} setPage={setPage} />}
     </div>
   )
 }
