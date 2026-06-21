@@ -142,6 +142,37 @@ app.get('/api/bookings/user/:id', async (req, res) => {
   }
 })
 
+// GET REVIEWS FOR A HOMESTAY
+app.get('/api/reviews/:homestay_id', async (req, res) => {
+  try {
+    const result = await pool.query(
+      `SELECT reviews.*, users.name as tourist_name 
+       FROM reviews 
+       JOIN users ON reviews.tourist_id = users.id 
+       WHERE homestay_id = $1 
+       ORDER BY reviews.created_at DESC`,
+      [req.params.homestay_id]
+    )
+    res.json(result.rows)
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+})
+
+// ADD REVIEW
+app.post('/api/reviews', async (req, res) => {
+  try {
+    const { tourist_id, homestay_id, rating, comment } = req.body
+    const result = await pool.query(
+      'INSERT INTO reviews (tourist_id, homestay_id, rating, comment) VALUES ($1,$2,$3,$4) RETURNING *',
+      [tourist_id, homestay_id, rating, comment]
+    )
+    res.status(201).json(result.rows[0])
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+})
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log('StayNepal server running on port ' + PORT);

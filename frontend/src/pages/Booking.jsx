@@ -138,6 +138,13 @@ function Booking({ user, homestay, setPage }) {
       >
         Confirm Booking — NPR {calculateTotal()}
       </button>
+
+      <button
+        onClick={() => setPage('reviews')}
+        style={{width:'100%', padding:'12px', background:'white', color:'#2563eb', border:'2px solid #2563eb', borderRadius:'8px', fontSize:'15px', cursor:'pointer', marginTop:'12px'}}
+      >
+        ⭐ View Reviews
+      </button>
     </div>
   )
 }

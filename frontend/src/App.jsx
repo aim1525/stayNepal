@@ -6,6 +6,7 @@ import Search from './pages/Search'
 import HostDashboard from './pages/HostDashboard'
 import Booking from './pages/Booking'
 import MyBookings from './pages/MyBookings'
+import Reviews from './pages/Reviews'
 
 function App() {
   const [page, setPage] = useState('home')
@@ -58,15 +59,12 @@ function App() {
               {text.myBookings}
             </span>
           )}
-
-          {/* LANGUAGE SWITCH BUTTON */}
           <button
             onClick={() => setLang(lang === 'en' ? 'ne' : 'en')}
             style={{background:'#374151', color:'white', border:'1px solid #6b7280', padding:'6px 12px', borderRadius:'6px', cursor:'pointer', fontSize:'13px', fontWeight:'500'}}
           >
             {lang === 'en' ? '🇳🇵 नेपाली' : '🇬🇧 English'}
           </button>
-
           {user ? (
             <>
               <span style={{color:'#93c5fd', fontSize:'14px'}}>{text.hello}, {user.name}</span>
@@ -97,6 +95,7 @@ function App() {
       {page === 'host' && <HostDashboard user={user} lang={lang} />}
       {page === 'booking' && <Booking user={user} homestay={selectedHomestay} setPage={setPage} lang={lang} />}
       {page === 'mybookings' && <MyBookings user={user} setPage={setPage} lang={lang} />}
+      {page === 'reviews' && <Reviews user={user} homestay={selectedHomestay} setPage={setPage} />}
     </div>
   )
 }
